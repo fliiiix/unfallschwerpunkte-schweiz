@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Unfallschwerpunkte der Schweiz</title>
+	<meta charset="utf-8">
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" integrity="sha256-tHoAPGoNdhIR28YHl9DWLzeRfdwigkH7OCBXMrHXhoM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-hexbin@0.2.2/build/d3-hexbin.min.js"></script>
+</head>
+<body>
+	<svg class="target" />
+	<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(){
+   	  const svg = d3.select(".target")
+        .attr("viewBox", [0, 0, 960, 600]);
+
+      getJSON('./assets/data/ch-cantons-lakes.json', function(topodata_ch) {
+        svg.append("path")
+          .datum(topojson.mesh(topodata_ch))
+          .attr("fill", "none")
+          .attr("stroke", "#777")
+          .attr("stroke-width", 0.5)
+          .attr("stroke-linejoin", "round")
+          .attr("d", d3.geoPath());
+
+        svg.selectAll("path")
+          .data(topojson.feature(topodata_ch, topodata_ch.objects.lakes).features)
+          .enter()
+          .append("path")
+          .attr("d", d3.geoPath())
+          .style("fill", "#002366");
+      });
+	 });
+
+    function data() {
+      var parseDate = d3.timeParse("%m/%d/%Y");
+      var projection = d3.geoAlbersUsa().scale(1280).translate([480, 300]);
+
+      const data = d3.tsvParse(rawdata, d => {
+        const p = projection(d);
+        p.date = parseDate(d.date);
+        return p;
+      });
+      return Object.assign(
+        hexbin(data)
+          .map(d => (d.date = new Date(d3.median(d, d => d.date)), d))
+          .sort((a, b) => b.length - a.length),
+        {title: "Median opening year"}
+      );
+    }
+    function radius(data) {
+      return d3.scaleSqrt([0, d3.max(data, d => d.length)], [0, hexbin.radius() * Math.SQRT2]);
+    }
+    function color(data) {
+      d3.scaleSequential(d3.extent(data, d => d.date), d3.interpolateSpectral);
+    }
+    function hexbin(width,height) {
+      return d3.hexbin().extent([[0, 0], [width, height]]).radius(10);
+    }
+
+   function getJSON(url, callback) {   
+      var xobj = new XMLHttpRequest();
+          xobj.overrideMimeType("application/json");
+      xobj.open('GET', url, true);
+      xobj.onreadystatechange = function () {
+            if (xobj.readyState == 4 && xobj.status == "200") {
+              callback(JSON.parse(xobj.responseText));
+            }
+            else {
+              console.log("Wopsi status: " + xobj.status);
+            }
+      };
+      xobj.send(null);  
+   }
+
+const rawdata = `0	1	date
+-94.148036	36.334145	07/01/1962
+-92.966037	36.203334	08/01/1964
+-83.459929	34.24863	04/12/1988
+-94.513179	36.181117	08/01/1965
+-92.439708	35.110687	05/01/1972`;
+	</script>
+</body>
+</html>

@@ -2,23 +2,14 @@
 
 ## Project setup
 ```
-yarn install
+python3 -m http.server
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## Built with
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- d3
+- d3-hexbin
+- topojson
+  * [data](https://www.swisstopo.admin.ch/)
+  * [data processing](https://github.com/interactivethings/swiss-maps)
