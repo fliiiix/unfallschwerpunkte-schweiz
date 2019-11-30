@@ -10,9 +10,112 @@
 <body>
 	<svg class="target" />
 	<script type="text/javascript">
+    const rawdata = JSON.parse(`{
+  "type" : "FeatureCollection",
+  "name" : "RoadTrafficAccidentLocations_GEOJSON",
+  "features" : [
+    {
+      "type" : "Feature",
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [ 8.52932024, 47.36851152, 0 ]
+      },
+      "properties" : {
+        "AccidentUID" : "9FD6441F802C20A6E0430A865E3320A6",
+        "AccidentType" : "at0",
+        "AccidentType_de" : "Schleuder- oder Selbstunfall",
+        "AccidentType_fr" : "dérapage ou perte de maîtrise",
+        "AccidentType_it" : "Incidente di sbandamento o per colpa propria",
+        "AccidentType_en" : "Accident with skidding or self-accident",
+        "AccidentSeverityCategory" : "as3",
+        "AccidentSeverityCategory_de" : "Unfall mit Leichtverletzten",
+        "AccidentSeverityCategory_fr" : "accident avec blessés légers",
+        "AccidentSeverityCategory_it" : "Incidente con feriti leggeri",
+        "AccidentSeverityCategory_en" : "Accident with light injuries",
+        "AccidentInvolvingPedestrian" : "false",
+        "AccidentInvolvingBicycle" : "true",
+        "AccidentInvolvingMotorcycle" : "false",
+        "RoadType" : "rt433",
+        "RoadType_de" : "Nebenstrasse",
+        "RoadType_fr" : "route secondaire",
+        "RoadType_it" : "Strada secondaria",
+        "RoadType_en" : "Minor road",
+        "AccidentLocation_CHLV95_E" : "2682382",
+        "AccidentLocation_CHLV95_N" : "1246980",
+        "CantonCode" : "ZH",
+        "MunicipalityCode" : "0261",
+        "AccidentYear" : "2011",
+        "AccidentMonth" : "1",
+        "AccidentMonth_de" : "Januar",
+        "AccidentMonth_fr" : "janvier",
+        "AccidentMonth_it" : "Gennaio",
+        "AccidentMonth_en" : "January",
+        "AccidentWeekDay" : "aw406",
+        "AccidentWeekDay_de" : "Samstag",
+        "AccidentWeekDay_fr" : "samedi",
+        "AccidentWeekDay_it" : "Sabato",
+        "AccidentWeekDay_en" : "Saturday",
+        "AccidentHour" : "01",
+        "AccidentHour_text" : "01h-02h"
+      }
+    },
+    {
+      "type" : "Feature",
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : [ 6.15403445, 46.2004747, 0 ]
+      },
+      "properties" : {
+        "AccidentUID" : "99AE7B25356510B0E0430A865E3310B0",
+        "AccidentType" : "at4",
+        "AccidentType_de" : "Einbiegeunfall",
+        "AccidentType_fr" : "accident en s'engageant sur une route",
+        "AccidentType_it" : "Incidente nell’immettersi in una strada",
+        "AccidentType_en" : "Accident when turning-into main road",
+        "AccidentSeverityCategory" : "as3",
+        "AccidentSeverityCategory_de" : "Unfall mit Leichtverletzten",
+        "AccidentSeverityCategory_fr" : "accident avec blessés légers",
+        "AccidentSeverityCategory_it" : "Incidente con feriti leggeri",
+        "AccidentSeverityCategory_en" : "Accident with light injuries",
+        "AccidentInvolvingPedestrian" : "false",
+        "AccidentInvolvingBicycle" : "false",
+        "AccidentInvolvingMotorcycle" : "true",
+        "RoadType" : "rt433",
+        "RoadType_de" : "Nebenstrasse",
+        "RoadType_fr" : "route secondaire",
+        "RoadType_it" : "Strada secondaria",
+        "RoadType_en" : "Minor road",
+        "AccidentLocation_CHLV95_E" : "2500845",
+        "AccidentLocation_CHLV95_N" : "1117371",
+        "CantonCode" : "GE",
+        "MunicipalityCode" : "6621",
+        "AccidentYear" : "2011",
+        "AccidentMonth" : "1",
+        "AccidentMonth_de" : "Januar",
+        "AccidentMonth_fr" : "janvier",
+        "AccidentMonth_it" : "Gennaio",
+        "AccidentMonth_en" : "January",
+        "AccidentWeekDay" : "aw406",
+        "AccidentWeekDay_de" : "Samstag",
+        "AccidentWeekDay_fr" : "samedi",
+        "AccidentWeekDay_it" : "Sabato",
+        "AccidentWeekDay_en" : "Saturday",
+        "AccidentHour" : "01",
+        "AccidentHour_text" : "01h-02h"
+      }
+    }
+    ]}`);
+
     document.addEventListener("DOMContentLoaded", function(){
-   	  const svg = d3.select(".target")
-        .attr("viewBox", [0, 0, 960, 600]);
+   	  const width = 960;
+      const height = 600;
+      const svg = d3.select(".target")
+        .attr("viewBox", [0, 0, width, height]);
+
+      var projection = d3.geoEquirectangular()
+        .scale(153)
+        .translate([width / 2, height / 2])
+        .precision(.1);
 
       getJSON('./assets/data/ch-cantons-lakes.json', function(topodata_ch) {
         svg.append("path")
@@ -29,8 +132,19 @@
           .append("path")
           .attr("d", d3.geoPath())
           .style("fill", "#002366");
-      });
-	 });
+
+        svg.selectAll( "path" )
+        .data( rawdata.features )
+        .enter()
+        .append( "circle", "path" )
+        .attr("r", 5)
+        .attr( "fill", "#900" )
+        .attr( "stroke", "#999" )
+        .attr( "d", d3.geoPath() );
+
+	    });
+    });
+
 
     function data() {
       var parseDate = d3.timeParse("%m/%d/%Y");
@@ -66,19 +180,11 @@
             if (xobj.readyState == 4 && xobj.status == "200") {
               callback(JSON.parse(xobj.responseText));
             }
-            else {
-              console.log("Wopsi status: " + xobj.status);
-            }
       };
       xobj.send(null);  
    }
 
-const rawdata = `0	1	date
--94.148036	36.334145	07/01/1962
--92.966037	36.203334	08/01/1964
--83.459929	34.24863	04/12/1988
--94.513179	36.181117	08/01/1965
--92.439708	35.110687	05/01/1972`;
+
 	</script>
 </body>
 </html>
