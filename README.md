@@ -1,6 +1,9 @@
 # unfallschwerpunkte-schweiz
 
 ## Project setup
+
+Copy `RoadTrafficAccidentLocations.json` from https://data.geo.admin.ch/ch.astra.unfaelle-personenschaeden_alle/
+
 ```
 python3 -m http.server
 ```

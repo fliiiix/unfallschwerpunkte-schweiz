@@ -44,7 +44,6 @@
 
         const geo_path = d3.geoPath().projection(projection);
 
-
         //draw basic map
         svg.append("path")
           .datum(topojson.mesh(topodata_ch))
@@ -54,22 +53,25 @@
           .attr("stroke-linejoin", "round")
           .attr("d", geo_path);
 
-        // draw features
-        svg.selectAll("circle")
-        .data( rawdata.features )
-        .enter()
-        .append("circle")
-        .attr("transform", function(d) {console.log(projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ])); return "translate(" + projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ]) + ")";})
-        .attr("r", "2px")
-        .attr("fill", "red");
-
-        // draw see
-        svg.selectAll("path")
-          .data(topojson.feature(topodata_ch, topodata_ch.objects.lakes).features)
+        
+        d3.json('/assets/data/RoadTrafficAccidentLocations.json').then(function(accident_data) {
+          // draw features
+          svg.selectAll("circle")
+          .data( accident_data.features )
           .enter()
-          .append("path")
-          .attr("d", geo_path)
-          .style("fill", "#002366");
+          .append("circle")
+          .attr("transform", function(d) {console.log(projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ])); return "translate(" + projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ]) + ")";})
+          .attr("r", "2px")
+          .attr("fill", "red");
+
+          // draw see
+          svg.selectAll("path")
+            .data(topojson.feature(topodata_ch, topodata_ch.objects.lakes).features)
+            .enter()
+            .append("path")
+            .attr("d", geo_path)
+            .style("fill", "#002366");
+        });  
 	    });
     });
 	</script>
