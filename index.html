@@ -28,37 +28,21 @@
 
     document.addEventListener("DOMContentLoaded", function(){
    	  const width = 960;
-      const height = 600;
+      const height = 620;
       const svg = d3.select(".target")
         .attr("viewBox", [0, 0, width, height])
         .attr("width", width)
         .attr("height", height);
 
+      d3.json('/assets/data/ch-cantons-lakes.json').then(function(topodata_ch) {
 
-
-      getJSON('./assets/data/ch-cantons-lakes.json', function(topodata_ch) {
-        const [minX, minY, maxX, maxY] = topojson.bbox(topodata_ch);
-        console.log(minX);
-        console.log(maxX);
-        console.log(minY);
-        console.log(maxY);
-
-        const cheight = height - minX; //((maxY - minY) / (maxX - minX)) * width;
-        const cwidth = height - minX;
-
-        console.log(cheight);
-
-        var projection = d3.geoMercator()
-          //.rotate([0, 0])
+        const projection = d3.geoMercator()
           .center([8.1336, 46.484])
-          .scale(7500)
-          //.translate([490, 190])
+          .scale(8000)
           .translate([width/2, height/2])
-          //.translate([0, 0])
           .precision(.1);
-          //.center([8.1336, 46.484])
-          //.translate([width / 2, height / 2]);
-          //.precision(.1);*/
+
+        const geo_path = d3.geoPath().projection(projection);
 
 
         //draw basic map
@@ -68,15 +52,15 @@
           .attr("stroke", "#777")
           .attr("stroke-width", 0.5)
           .attr("stroke-linejoin", "round")
-          .attr("d", d3.geoPath());
+          .attr("d", geo_path);
 
-
+        // draw features
         svg.selectAll("circle")
         .data( rawdata.features )
         .enter()
         .append("circle")
         .attr("transform", function(d) {console.log(projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ])); return "translate(" + projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ]) + ")";})
-        .attr("r", "3px")
+        .attr("r", "2px")
         .attr("fill", "red");
 
         // draw see
@@ -84,51 +68,10 @@
           .data(topojson.feature(topodata_ch, topodata_ch.objects.lakes).features)
           .enter()
           .append("path")
-          .attr("d", d3.geoPath())
+          .attr("d", geo_path)
           .style("fill", "#002366");
 	    });
     });
-
-
-    function data() {
-      var parseDate = d3.timeParse("%m/%d/%Y");
-      var projection = d3.geoAlbersUsa().scale(1280).translate([480, 300]);
-
-      const data = d3.tsvParse(rawdata, d => {
-        const p = projection(d);
-        p.date = parseDate(d.date);
-        return p;
-      });
-      return Object.assign(
-        hexbin(data)
-          .map(d => (d.date = new Date(d3.median(d, d => d.date)), d))
-          .sort((a, b) => b.length - a.length),
-        {title: "Median opening year"}
-      );
-    }
-    function radius(data) {
-      return d3.scaleSqrt([0, d3.max(data, d => d.length)], [0, hexbin.radius() * Math.SQRT2]);
-    }
-    function color(data) {
-      d3.scaleSequential(d3.extent(data, d => d.date), d3.interpolateSpectral);
-    }
-    function hexbin(width,height) {
-      return d3.hexbin().extent([[0, 0], [width, height]]).radius(10);
-    }
-
-   function getJSON(url, callback) {   
-      var xobj = new XMLHttpRequest();
-          xobj.overrideMimeType("application/json");
-      xobj.open('GET', url, true);
-      xobj.onreadystatechange = function () {
-            if (xobj.readyState == 4 && xobj.status == "200") {
-              callback(JSON.parse(xobj.responseText));
-            }
-      };
-      xobj.send(null);  
-   }
-
-
 	</script>
 </body>
 </html>
