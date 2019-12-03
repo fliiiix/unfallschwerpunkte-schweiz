@@ -38,7 +38,7 @@
 
         const projection = d3.geoMercator()
           .center([8.1336, 46.484])
-          .scale(8000)
+          .scale(8800)
           .translate([width/2, height/2])
           .precision(.1);
 
@@ -61,8 +61,25 @@
           .enter()
           .append("circle")
           .attr("transform", function(d) {console.log(projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ])); return "translate(" + projection([ d.geometry.coordinates[0], d.geometry.coordinates[1] ]) + ")";})
-          .attr("r", "2px")
-          .attr("fill", "red");
+          .attr("r", function(d) {
+            if(d.properties.AccidentSeverityCategory == "as1"){
+              return "2px";
+            }
+            else{
+              return "1px";
+            }
+            })
+          .attr("fill", function(d) {
+            if(d.properties.AccidentSeverityCategory == "as1"){
+              return "red";
+            }
+            if(d.properties.AccidentSeverityCategory == "as2"){
+              return "orange";
+            }
+            if(d.properties.AccidentSeverityCategory == "as3"){
+              return "green";
+            }
+           });
 
           // draw see
           svg.selectAll("path")
