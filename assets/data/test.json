@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection", 
+  "name": "RoadTrafficAccidentLocations_GEOJSON", 
+  "features": [ 
+    { 
+     "type": "Feature", 
+     "geometry": {"type":"Point","coordinates":[8.52932024,47.36851152,0.0]}, 
+     "properties": { "UID":"9FD6441F802C20A6E0430A865E3320A6","Type":"at0","SeverityCategory":"as3","InvolvingPedestrian":"false","InvolvingBicycle":"true","InvolvingMotorcycle":"false","RoadType":"rt433","RoadType_de":"Nebenstrasse","Location_CHLV95_E":"2682382","Location_CHLV95_N":"1246980","CantonCode":"ZH","MunicipalityCode":"0261","Year":"2011","Month":"1","WeekDay":"aw406","Hour":"01","Hour_text":"01h-02h" } 
+    },
+    { 
+     "type": "Feature", 
+     "geometry": {"type":"Point","coordinates":[6.15403445,46.2004747,0.0]}, 
+     "properties": { "UID":"99AE7B25356510B0E0430A865E3310B0","Type":"at4","SeverityCategory":"as3","InvolvingPedestrian":"false","InvolvingBicycle":"false","InvolvingMotorcycle":"true","RoadType":"rt433","RoadType_de":"Nebenstrasse","Location_CHLV95_E":"2500845","Location_CHLV95_N":"1117371","CantonCode":"GE","MunicipalityCode":"6621","Year":"2011","Month":"1","WeekDay":"aw406","Hour":"01","Hour_text":"01h-02h" } 
+    },
+    { 
+     "type": "Feature", 
+     "geometry": {"type":"Point","coordinates":[7.24184409,47.14256018,0.0]}, 
+     "properties": { "UID":"9A096471BA579094E0430A865E339094","Type":"at00","SeverityCategory":"as2","InvolvingPedestrian":"false","InvolvingBicycle":"true","InvolvingMotorcycle":"false","RoadType":"rt433","RoadType_de":"Nebenstrasse","Location_CHLV95_E":"2585073","Location_CHLV95_N":"1221306","CantonCode":"BE","MunicipalityCode":"0371","Year":"2011","Month":"1","WeekDay":"aw406","Hour":"02","Hour_text":"02h-03h" } 
+    },
+    { 
+     "type": "Feature", 
+     "geometry": {"type":"Point","coordinates":[7.60215335,47.54182049,0.0]}, 
+     "properties": { "UID":"9B1F49744917E014E0430A865E33E014","Type":"at3","SeverityCategory":"as3","InvolvingPedestrian":"false","InvolvingBicycle":"false","InvolvingMotorcycle":"false","RoadType":"rt433","RoadType_de":"Nebenstrasse","Location_CHLV95_E":"2612312","Location_CHLV95_N":"1265690","CantonCode":"BS","MunicipalityCode":"2701","Year":"2011","Month":"1","WeekDay":"aw406","Hour":"02","Hour_text":"02h-03h" } 
+    }
+  ]
+}
