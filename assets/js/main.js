@@ -10,24 +10,17 @@ document.addEventListener("DOMContentLoaded", function() {
         range: {
             'min': 0,
             'max': 24
-        },
-        format: {
-            to: function(value) {
-                return value + ':00';
-            },
-            from: function(value) {
-                return Number(value.replace(':00', ''));
-            }
         }
     });
 
     const endTime = document.getElementById('endTime');
     const startTime = document.getElementById('startTime');
     slider.noUiSlider.on('update', function(values, handle) {
+        const time = values[handle].replace('.', ':');
         if (handle == 1) {
-            endTime.innerHTML = values[handle];
+            endTime.innerHTML = time;
         } else {
-            startTime.innerHTML = values[handle];
+            startTime.innerHTML = time;
         }
 
         drawFeatures();
@@ -86,8 +79,18 @@ function drawFeatures() {
 
 
     d3.json('/assets/data/RoadTrafficAccidentLocations_converted_as1.json').then(accident_data => {
-        drawAccidentsOnMap(accident_data.features);
-        drawBarChart(accident_data);
+        var slider = document.getElementById('timeSlider');
+        const maxH = Number(slider.noUiSlider.get()[0].replace(':00', ''));
+        const minH = Number(slider.noUiSlider.get()[1].replace(':00', ''));
+
+        const filtered = accident_data.features.filter(function(d) {
+            const h = Number(d.properties.Hour);
+            return h <= minH && h >= maxH;
+        });
+
+
+        drawAccidentsOnMap(filtered);
+        drawBarChart(filtered);
     });
 }
 
@@ -119,14 +122,6 @@ function drawBarChart(data) {
         "Nebenanlage": "#444e86"
     };
 
-    var slider = document.getElementById('timeSlider');
-    const maxH = Number(slider.noUiSlider.get()[0].replace(':00', ''));
-    const minH = Number(slider.noUiSlider.get()[1].replace(':00', ''));
-
-    const filtered = data.features.filter(function(d) {
-        const h = Number(d.properties.Hour);
-        return h <= minH && h >= maxH;
-    });
 
     // map data by street type
     const bardata = d3.nest()
@@ -135,7 +130,7 @@ function drawBarChart(data) {
         })
         .rollup(function(d) {
             return d.length;
-        }).entries(filtered);
+        }).entries(data);
 
     // X axis
     const x = d3.scaleBand()
