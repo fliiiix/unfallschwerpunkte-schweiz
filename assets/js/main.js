@@ -77,7 +77,6 @@ function drawFeatures() {
     const typesvg = d3.select("#strassentyp");
     typesvg.selectAll("*").remove();
 
-
     d3.json('/assets/data/RoadTrafficAccidentLocations_converted_as1.json').then(accident_data => {
         var slider = document.getElementById('timeSlider');
         const maxH = Number(slider.noUiSlider.get()[0].replace(':00', ''));
@@ -87,7 +86,6 @@ function drawFeatures() {
             const h = Number(d.properties.Hour);
             return h <= minH && h >= maxH;
         });
-
 
         drawAccidentsOnMap(filtered);
         drawBarChart(filtered);
@@ -175,7 +173,6 @@ function drawBarChart(data) {
 
 function drawAccidentsOnMap(data) {
     const svg = d3.select("#map");
-    const geo_path = d3.geoPath().projection(projection);
     svg.selectAll("circle")
         .data(data)
         .enter()
@@ -183,7 +180,6 @@ function drawAccidentsOnMap(data) {
         .attr("transform", function(d) {
             return "translate(" + projection([d.geometry.coordinates[0], d.geometry.coordinates[1]]) + ")";
         })
-        .attr("d", geo_path)
         .attr("r", "1px")
         .attr("fill", "red");
 }
