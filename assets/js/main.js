@@ -12,45 +12,46 @@ document.addEventListener("DOMContentLoaded", function() {
             'max': 24
         },
         format: {
-            to: function (value) {
+            to: function(value) {
                 return value + ':00';
             },
-            from: function (value) {
+            from: function(value) {
                 return Number(value.replace(':00', ''));
             }
         }
     });
 
-    var endTime = document.getElementById('endTime');
+    const endTime = document.getElementById('endTime');
+    const startTime = document.getElementById('startTime');
     slider.noUiSlider.on('update', function(values, handle) {
-        console.log(values[handle]);
         if (handle == 1) {
             endTime.innerHTML = values[handle];
         } else {
             startTime.innerHTML = values[handle];
         }
+
+        drawFeatures();
     });
 });
 
+const width = 960;
+const height = 620;
+const projection = d3.geoMercator()
+    .center([8.1336, 46.484])
+    .scale(8800)
+    .translate([width / 2, height / 2])
+    .precision(.1);
+
 
 function drawElement() {
-    const width = 960;
-    const height = 620;
     const svg = d3.select("#map")
         .attr("viewBox", [0, 0, width, height])
         .attr("width", width)
         .attr("height", height)
         .call(d3.zoom().on("zoom", function() {
-            svg.attr("transform", d3.event.transform)
+            d3.select("#map").attr("transform", d3.event.transform);
         }))
-        .append("g");;
-
-    const projection = d3.geoMercator()
-        .center([8.1336, 46.484])
-        .scale(8800)
-        .translate([width / 2, height / 2])
-        .precision(.1);
-
+        .append("g");
     const geo_path = d3.geoPath().projection(projection);
 
     d3.json('/assets/data/ch-cantons-lakes.json').then(topodata_ch => {
@@ -72,10 +73,21 @@ function drawElement() {
             .style("fill", "#002366");
 
         // draw features
-        d3.json('/assets/data/RoadTrafficAccidentLocations_converted_as1.json').then(accident_data => {
-            drawAccidentsOnMap(svg, accident_data.features, projection);
-            drawBarChart(accident_data);
-        });
+        drawFeatures();
+    });
+}
+
+function drawFeatures() {
+    const svg = d3.select("#map");
+    svg.selectAll("circle").remove();
+
+    const typesvg = d3.select("#strassentyp");
+    typesvg.selectAll("*").remove();
+
+
+    d3.json('/assets/data/RoadTrafficAccidentLocations_converted_as1.json').then(accident_data => {
+        drawAccidentsOnMap(accident_data.features);
+        drawBarChart(accident_data);
     });
 }
 
@@ -107,6 +119,15 @@ function drawBarChart(data) {
         "Nebenanlage": "#444e86"
     };
 
+    var slider = document.getElementById('timeSlider');
+    const maxH = Number(slider.noUiSlider.get()[0].replace(':00', ''));
+    const minH = Number(slider.noUiSlider.get()[1].replace(':00', ''));
+
+    const filtered = data.features.filter(function(d) {
+        const h = Number(d.properties.Hour);
+        return h <= minH && h >= maxH;
+    });
+
     // map data by street type
     const bardata = d3.nest()
         .key(function(d) {
@@ -114,7 +135,7 @@ function drawBarChart(data) {
         })
         .rollup(function(d) {
             return d.length;
-        }).entries(data.features);
+        }).entries(filtered);
 
     // X axis
     const x = d3.scaleBand()
@@ -157,7 +178,9 @@ function drawBarChart(data) {
         })
 }
 
-function drawAccidentsOnMap(svg, data, projection) {
+function drawAccidentsOnMap(data) {
+    const svg = d3.select("#map");
+    const geo_path = d3.geoPath().projection(projection);
     svg.selectAll("circle")
         .data(data)
         .enter()
@@ -165,13 +188,7 @@ function drawAccidentsOnMap(svg, data, projection) {
         .attr("transform", function(d) {
             return "translate(" + projection([d.geometry.coordinates[0], d.geometry.coordinates[1]]) + ")";
         })
+        .attr("d", geo_path)
         .attr("r", "1px")
-        .attr("fill", function(d) {
-            if (d.properties.SeverityCategory == "as1") {
-                return "red";
-            }
-            if (d.properties.SeverityCategory == "as2") {
-                return "orange";
-            }
-        });
+        .attr("fill", "red");
 }
