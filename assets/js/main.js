@@ -9,7 +9,11 @@ function drawMap() {
     const svg = d3.select(".target")
         .attr("viewBox", [0, 0, width, height])
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .call(d3.zoom().on("zoom", function() {
+            svg.attr("transform", d3.event.transform)
+        }))
+        .append("g");;
 
     const projection = d3.geoMercator()
         .center([8.1336, 46.484])
