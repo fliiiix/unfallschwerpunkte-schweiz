@@ -1,10 +1,39 @@
 document.addEventListener("DOMContentLoaded", function() {
-    drawMap();
-    drawTreemap();
+    drawElement();
+
+    var slider = document.getElementById('timeSlider');
+
+    noUiSlider.create(slider, {
+        start: [0, 24],
+        step: 1,
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 24
+        },
+        format: {
+            to: function (value) {
+                return value + ':00';
+            },
+            from: function (value) {
+                return Number(value.replace(':00', ''));
+            }
+        }
+    });
+
+    var endTime = document.getElementById('endTime');
+    slider.noUiSlider.on('update', function(values, handle) {
+        console.log(values[handle]);
+        if (handle == 1) {
+            endTime.innerHTML = values[handle];
+        } else {
+            startTime.innerHTML = values[handle];
+        }
+    });
 });
 
 
-function drawMap() {
+function drawElement() {
     const width = 960;
     const height = 620;
     const svg = d3.select("#map")

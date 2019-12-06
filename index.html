@@ -20,15 +20,20 @@
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="assets/mighty/css/style.css">
-	
-	<script src="https://d3js.org/d3.v5.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" integrity="sha256-tHoAPGoNdhIR28YHl9DWLzeRfdwigkH7OCBXMrHXhoM=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-hexbin@0.2.2/build/d3-hexbin.min.js"></script>
+  
+   <script src="https://d3js.org/d3.v5.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" integrity="sha256-tHoAPGoNdhIR28YHl9DWLzeRfdwigkH7OCBXMrHXhoM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@14.1.0/distribute/nouislider.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://refreshless.com/nouislider/distribute/nouislider.css">
     <script src="assets/js/main.js"></script>
-
   </head>
 
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+    <div id="timeSlider" class="noUiSlider"></div>
+    <div>
+      <span>From: </span><span id="startTime"></span>
+      <span>To: </span><span id="endTime"></span>
+    </div>
     <svg id="map" />
     <svg id="strassentyp" />
   </body>
