@@ -42,6 +42,16 @@
       <span>From: </span><span id="startTime"></span>
       <span>To: </span><span id="endTime"></span>
     </div>
+    <div>
+      <label for="pedestrian">InvolvingPedestrian</label>
+      <input id="pedestrian" type="checkbox"  onchange="drawFeatures()" checked>
+
+      <label for="bicycle">InvolvingBicycle</label>
+      <input id="bicycle" type="checkbox" onchange="drawFeatures()" checked>
+
+      <label for="motorcycle">InvolvingMotorcycle</label>
+      <input id="motorcycle" type="checkbox" onchange="drawFeatures()" checked>
+    </div>
     <svg id="map" />
     <svg id="strassentyp" />
   </body>

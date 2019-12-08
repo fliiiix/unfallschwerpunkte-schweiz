@@ -78,14 +78,24 @@ function drawFeatures() {
     typesvg.selectAll("*").remove();
 
     d3.json('/assets/data/RoadTrafficAccidentLocations_converted_as1.json').then(accident_data => {
-        var slider = document.getElementById('timeSlider');
+        const slider = document.getElementById('timeSlider');
         const maxH = Number(slider.noUiSlider.get()[0].replace(':00', ''));
         const minH = Number(slider.noUiSlider.get()[1].replace(':00', ''));
 
+
+        const pedestrian = document.getElementById('pedestrian').checked ? "true" : "false";
+        const bicycle = document.getElementById('bicycle').checked ? "true" : "false";
+        const motorcycle = document.getElementById('motorcycle').checked ? "true" : "false";
+
         const filtered = accident_data.features.filter(function(d) {
+            console.log(d.properties.InvolvingPedestrian == pedestrian);
             const h = Number(d.properties.Hour);
-            return h <= minH && h >= maxH;
+            return h <= minH && h >= maxH; 
+            //&& d.properties.InvolvingPedestrian == pedestrian
+            //&& d.properties.InvolvingBicycle == bicycle
+            //&& d.properties.InvolvingMotorcycle == motorcycle;
         });
+        console.log(filtered);
 
         drawAccidentsOnMap(filtered);
         drawBarChart(filtered);
