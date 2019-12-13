@@ -43,16 +43,24 @@
       <span>To: </span><span id="endTime"></span>
     </div>
     <div>
+      <label for="car">InvolvingCar</label>
+      <input id="car" type="checkbox"  onchange="drawFeatures()" checked>
+
       <label for="pedestrian">InvolvingPedestrian</label>
-      <input id="pedestrian" type="checkbox"  onchange="drawFeatures()" checked>
+      <input id="pedestrian" type="checkbox"  onchange="drawFeatures()">
 
       <label for="bicycle">InvolvingBicycle</label>
-      <input id="bicycle" type="checkbox" onchange="drawFeatures()" checked>
+      <input id="bicycle" type="checkbox" onchange="drawFeatures()">
 
       <label for="motorcycle">InvolvingMotorcycle</label>
-      <input id="motorcycle" type="checkbox" onchange="drawFeatures()" checked>
+      <input id="motorcycle" type="checkbox" onchange="drawFeatures()">
     </div>
     <svg id="map" />
+    <div>
+      <span>Selected strassen type:</span>
+      <span id="streettype"></span>
+      <button id="streettypebutton" onclick="clearStreetType()" style="display: none;">Clear</button>
+    </div>
     <svg id="strassentyp" />
   </body>
 

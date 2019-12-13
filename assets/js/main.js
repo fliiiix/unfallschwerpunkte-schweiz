@@ -27,6 +27,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+function clearStreetType() {
+    document.getElementById('streettype').innerHTML = "";
+    document.getElementById('streettypebutton').style.display = "none";
+    drawFeatures();
+}
+
+var selected_barchart_filter;
 const width = 960;
 const height = 620;
 const projection = d3.geoMercator()
@@ -34,7 +41,6 @@ const projection = d3.geoMercator()
     .scale(8800)
     .translate([width / 2, height / 2])
     .precision(.1);
-
 
 function drawElement() {
     const svg = d3.select("#map")
@@ -86,14 +92,18 @@ function drawFeatures() {
         const pedestrian = document.getElementById('pedestrian').checked ? "true" : "false";
         const bicycle = document.getElementById('bicycle').checked ? "true" : "false";
         const motorcycle = document.getElementById('motorcycle').checked ? "true" : "false";
+        const car = document.getElementById('car').checked;
+
+        const street = document.getElementById('streettype').innerHTML;
 
         const filtered = accident_data.features.filter(function(d) {
-            console.log(d.properties.InvolvingPedestrian == pedestrian);
             const h = Number(d.properties.Hour);
-            return h <= minH && h >= maxH; 
-            //&& d.properties.InvolvingPedestrian == pedestrian
-            //&& d.properties.InvolvingBicycle == bicycle
-            //&& d.properties.InvolvingMotorcycle == motorcycle;
+            return h <= minH && h >= maxH &&
+                (d.properties.RoadType_de == street || street == "") &&
+                (d.properties.InvolvingPedestrian == pedestrian &&
+                    d.properties.InvolvingBicycle == bicycle &&
+                    d.properties.InvolvingMotorcycle == motorcycle ||
+                    car == true);
         });
         console.log(filtered);
 
@@ -128,6 +138,15 @@ function drawBarChart(data) {
         "andere": "#955196",
         "Autostrasse": "#003f5c",
         "Nebenanlage": "#444e86"
+    };
+
+    const color_lighter = {
+        "Hauptstrasse": "#fe9987",
+        "Nebenstrasse": "#fec04c",
+        "Autobahn": "#e785a7",
+        "andere": "#b980ba",
+        "Autostrasse": "#0094d9",
+        "Nebenanlage": "#6f7ab6"
     };
 
 
@@ -179,6 +198,43 @@ function drawBarChart(data) {
         .attr("fill", function(d) {
             return color[d.key];
         })
+        .on("mouseenter", function(d) {
+            d3.select(this).attr("fill", color_lighter[d.key]);
+        })
+        .on("mouseleave", function(d) {
+            d3.select(this).attr("fill", color[d.key]);
+        })
+        .on("click", function(d) {
+            document.getElementById('streettypebutton').style.display = "block";
+            document.getElementById('streettype').innerHTML = d.key;
+            drawFeatures();
+        });
+
+    // draw lables
+    svgStrassenType.selectAll(".text")
+        .data(bardata)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("x", (function(d) {
+            spacer = 10;
+            if (d.value < 10) {
+                spacer = 18;
+            } else if (d.value < 100) {
+                spacer = 15;
+            }
+            return x(d.key) + spacer;
+        }))
+        .attr("y", function(d) {
+            return y(d.value) - 20;
+        })
+        .attr("dy", ".75em")
+        .attr("fill", function(d) {
+            return color[d.key];
+        })
+        .text(function(d) {
+            return d.value;
+        });
 }
 
 function drawAccidentsOnMap(data) {
