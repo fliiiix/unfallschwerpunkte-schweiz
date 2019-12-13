@@ -99,10 +99,9 @@ function drawFeatures() {
             const h = Number(d.properties.Hour);
             return h <= minH && h >= maxH &&
                 (d.properties.RoadType_de == street || street == "") &&
-                (d.properties.InvolvingPedestrian == pedestrian &&
-                    d.properties.InvolvingBicycle == bicycle &&
-                    d.properties.InvolvingMotorcycle == motorcycle ||
-                    car == true);
+                (d.properties.InvolvingPedestrian == pedestrian || car == true) &&
+                (d.properties.InvolvingBicycle == bicycle || car == true) &&
+                (d.properties.InvolvingMotorcycle == motorcycle || car == true);
         });
 
         drawAccidentsOnMap(filtered);
