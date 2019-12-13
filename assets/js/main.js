@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function() {
     drawElement();
 
     var slider = document.getElementById('timeSlider');
-
     noUiSlider.create(slider, {
         start: [0, 24],
         step: 1,
@@ -15,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const endTime = document.getElementById('endTime');
     const startTime = document.getElementById('startTime');
-    slider.noUiSlider.on('update', function(values, handle) {
+    slider.noUiSlider.on('set', function(values, handle) {
         const time = values[handle].replace('.', ':');
         if (handle == 1) {
             endTime.innerHTML = time;
@@ -105,7 +104,6 @@ function drawFeatures() {
                     d.properties.InvolvingMotorcycle == motorcycle ||
                     car == true);
         });
-        console.log(filtered);
 
         drawAccidentsOnMap(filtered);
         drawBarChart(filtered);
