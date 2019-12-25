@@ -20,6 +20,21 @@
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="css/style.css">
+	
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" integrity="sha256-tHoAPGoNdhIR28YHl9DWLzeRfdwigkH7OCBXMrHXhoM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@14.1.0/distribute/nouislider.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://refreshless.com/nouislider/distribute/nouislider.css">
+	<script src="../js/main.js"></script>
+	<style type="text/css">
+      .noUi-connect {
+          /*background: #955196;*/
+		  background: #01d28e;
+      }
+      /*.noUi-horizontal .noUi-handle, .noUi-vertical .noUi-handle {
+          background: purple;
+      }*/
+    </style>
 
   </head>
 
@@ -87,11 +102,42 @@
     <div class="site-section">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-md-4">
-            <h2 class="h4 mb-4">Visualization</h2>
-            <p>PLEASE FILL TEXT.</p>
-            <p>PLEASE FILL TEXT.</p>
-          </div>
+          <div>
+			<h3 class="h4 mb-4">Timeframe</h3>
+			<p>Please select the time span of data you want to be included in the data:</p>
+            <div id="timeSlider" class="noUiSlider" width="1.0"></div>
+			<br/>
+			<div>
+			  <span>From: </span><span id="startTime">0:00</span>
+			  <span>To: </span><span id="endTime">24:00</span>
+			</div>
+			<br/>
+			<h3 class="h4 mb-4">Involvement</h3>
+			<p>Please select the type of involved actors that should be included in the data:</p>
+			<div>
+			  <input id="car" type="checkbox" onchange="drawFeatures()" checked>
+			  <label for="car">Car(s)</label>
+
+			  <input id="pedestrian" type="checkbox" style="margin-left:70px" onchange="drawFeatures()">
+			  <label for="pedestrian">Pedestrian(s)</label>
+
+			  <input id="bicycle" type="checkbox" style="margin-left:70px" onchange="drawFeatures()">
+			  <label for="bicycle">Bicycle(s)</label>
+
+			  <input id="motorcycle" type="checkbox" style="margin-left:70px" onchange="drawFeatures()">
+			  <label for="motorcycle">Motorcycle(s)</label>
+			</div>
+			<br/>
+			<h3 class="h4 mb-4">Map</h3>
+			<svg id="map" />
+			<h3 class="h4 mb-4">Street type</h3>
+			<div>
+			  <span>Select a street type to draw all related accidents into the map:</span>
+			  <span id="streettype"></span>
+			  <button id="streettypebutton" onclick="clearStreetType()" style="display: none;">Clear</button>
+			</div>
+			<svg id="strassentyp" />
+		  </div>
         </div>
       </div>
     </div> <!-- END .site-section -->

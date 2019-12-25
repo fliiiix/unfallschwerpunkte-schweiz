@@ -770,12 +770,12 @@ h1, h2, h3, h4, h5,
   .site-section-cover,
   .site-section-cover .container > .row {
     height: calc(100vh - 396px);
-    min-height: 477px; }
+    max-height: 477px; }
     @media (max-width: 991.98px) {
       .site-section-cover,
       .site-section-cover .container > .row {
         height: calc(70vh - 396px);
-        min-height: 400px; } }
+        max-height: 400px; } }
   .site-section-cover.overlay {
     position: relative; }
     .site-section-cover.overlay:before {
