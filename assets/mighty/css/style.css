@@ -293,7 +293,6 @@ h1, h2, h3, h4, h5,
 
 .site-footer {
   padding: 1em 0;
-  max-height: 200px;
   background: #efefef; }
   @media (min-width: 768px) {
     .site-footer {
@@ -769,13 +768,13 @@ h1, h2, h3, h4, h5,
     z-index: 2; }
   .site-section-cover,
   .site-section-cover .container > .row {
-    height: calc(100vh - 396px);
-    max-height: 477px; }
+    height: calc(100vh - 196px);
+    min-height: 677px; }
     @media (max-width: 991.98px) {
       .site-section-cover,
       .site-section-cover .container > .row {
-        height: calc(70vh - 396px);
-        max-height: 400px; } }
+        height: calc(70vh - 196px);
+        min-height: 600px; } }
   .site-section-cover.overlay {
     position: relative; }
     .site-section-cover.overlay:before {
