@@ -52,7 +52,7 @@ function drawElement() {
         .append("g");
     const geo_path = d3.geoPath().projection(projection);
 
-    d3.json('/assets/data/ch-cantons-lakes.json').then(topodata_ch => {
+    d3.json('assets/data/ch-cantons-lakes.json').then(topodata_ch => {
         //draw basic map
         svg.append("path")
             .datum(topojson.mesh(topodata_ch))
@@ -82,7 +82,7 @@ function drawFeatures() {
     const typesvg = d3.select("#strassentyp");
     typesvg.selectAll("*").remove();
 
-    d3.json('/assets/data/RoadTrafficAccidentLocations_converted_as1.json').then(accident_data => {
+    d3.json('assets/data/RoadTrafficAccidentLocations_converted_as1.json').then(accident_data => {
         const slider = document.getElementById('timeSlider');
         const maxH = Number(slider.noUiSlider.get()[0].replace(':00', ''));
         const minH = Number(slider.noUiSlider.get()[1].replace(':00', ''));
